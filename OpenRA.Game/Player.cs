@@ -36,14 +36,6 @@ namespace OpenRA
 
 	public class Player : IScriptBindable, IScriptNotifyBind, ILuaTableBinding, ILuaEqualityBinding, ILuaToStringBinding
 	{
-		struct StanceColors
-		{
-			public Color Self;
-			public Color Allies;
-			public Color Enemies;
-			public Color Neutrals;
-		}
-
 		public readonly Actor PlayerActor;
 		public readonly Color Color;
 
@@ -99,8 +91,6 @@ namespace OpenRA
 				return WinState != WinState.Undefined && !inMissionMap;
 			}
 		}
-
-		readonly StanceColors stanceColors;
 
 		public static FactionInfo ResolveFaction(string factionName, IEnumerable<FactionInfo> factionInfos, MersenneTwister playerRandom, bool requireSelectable = true)
 		{
@@ -220,11 +210,6 @@ namespace OpenRA
 					logic.Activate(this);
 			}
 
-			stanceColors.Self = Game.Settings.Game.SelfColor;
-			stanceColors.Allies = Game.Settings.Game.AllyColor;
-			stanceColors.Enemies = Game.Settings.Game.EnemyColor;
-			stanceColors.Neutrals = Game.Settings.Game.NeutralColor;
-
 			unlockRenderPlayer = PlayerActor.TraitsImplementing<IUnlocksRenderPlayer>().ToArray();
 			notifyDisconnected = PlayerActor.TraitsImplementing<INotifyPlayerDisconnected>().ToArray();
 		}
@@ -258,7 +243,7 @@ namespace OpenRA
 			return RelationshipWith(p) == PlayerRelationship.Ally;
 		}
 
-		public Color PlayerRelationshipColor(Actor a)
+		public static Color PlayerRelationshipColor(Actor a)
 		{
 			var renderPlayer = a.World.RenderPlayer;
 			var player = renderPlayer ?? a.World.LocalPlayer;
@@ -270,16 +255,16 @@ namespace OpenRA
 					apparentOwner = effectiveOwner.Owner;
 
 				if (apparentOwner == player)
-					return stanceColors.Self;
+					return Game.Settings.Game.SelfColor;
 
 				if (apparentOwner.IsAlliedWith(player))
-					return stanceColors.Allies;
+					return Game.Settings.Game.AllyColor;
 
 				if (!apparentOwner.NonCombatant)
-					return stanceColors.Enemies;
+					return Game.Settings.Game.EnemyColor;
 			}
 
-			return stanceColors.Neutrals;
+			return Game.Settings.Game.NeutralColor;
 		}
 
 		internal void PlayerDisconnected(Player p)
