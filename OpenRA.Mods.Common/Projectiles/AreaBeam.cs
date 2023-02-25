@@ -77,7 +77,7 @@ namespace OpenRA.Mods.Common.Projectiles
 
 		public IProjectile Create(ProjectileArgs args)
 		{
-			var c = UsePlayerColor ? args.SourceActor.Owner.Color : Color;
+			var c = UsePlayerColor ? Player.ActorColor(args.SourceActor) : Color;
 			return new AreaBeam(this, args, c);
 		}
 	}

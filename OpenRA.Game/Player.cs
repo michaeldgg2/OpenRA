@@ -37,8 +37,6 @@ namespace OpenRA
 	public class Player : IScriptBindable, IScriptNotifyBind, ILuaTableBinding, ILuaEqualityBinding, ILuaToStringBinding
 	{
 		public readonly Actor PlayerActor;
-		public readonly Color Color;
-
 		public readonly string PlayerName;
 		public readonly string InternalName;
 		public readonly FactionInfo Faction;
@@ -52,6 +50,11 @@ namespace OpenRA
 		public readonly string BotType;
 		public readonly Shroud Shroud;
 		public readonly FrozenActorLayer FrozenActorLayer;
+
+		readonly Color color;
+
+		/// <returns> Player color with relationship colors applied </returns>
+		public Color Color { get; private set; }
 
 		/// <summary>The faction (including Random, etc.) that was selected in the lobby.</summary>
 		public readonly FactionInfo DisplayFaction;
@@ -151,7 +154,8 @@ namespace OpenRA
 			if (client != null)
 			{
 				ClientIndex = client.Index;
-				Color = client.Color;
+				color = client.Color;
+				Color = color;
 				PlayerName = ResolvePlayerName(client, world.LobbyInfo.Clients, world.Map.Rules.Actors[SystemActors.Player].TraitInfos<IBotInfo>());
 
 				BotType = client.Bot;
@@ -169,6 +173,7 @@ namespace OpenRA
 			{
 				// Map player
 				ClientIndex = world.LobbyInfo.Clients.FirstOrDefault(c => c.IsAdmin)?.Index ?? 0; // Owned by the host (TODO: fix this)
+				color = pr.Color;
 				Color = pr.Color;
 				PlayerName = pr.Name;
 				NonCombatant = pr.NonCombatant;
@@ -243,28 +248,38 @@ namespace OpenRA
 			return RelationshipWith(p) == PlayerRelationship.Ally;
 		}
 
-		public static Color PlayerRelationshipColor(Actor a)
+		/// <returns> <see cref="color"/>, ignoring player relationship colors. </returns>
+		public static Color GetColor(Player p) => p.color;
+
+		public static void SetupRelationshipColors(Player[] players, Player observer)
 		{
-			var renderPlayer = a.World.RenderPlayer;
-			var player = renderPlayer ?? a.World.LocalPlayer;
-			if (player != null && !player.Spectating)
-			{
-				var effectiveOwner = a.EffectiveOwner;
-				var apparentOwner = a.Owner;
-				if (effectiveOwner != null && effectiveOwner.Disguised && !a.Owner.IsAlliedWith(renderPlayer))
-					apparentOwner = effectiveOwner.Owner;
+			foreach	(var p in players)
+				p.Color = PlayerRelationshipColor(p, observer);
+		}
 
-				if (apparentOwner == player)
-					return Game.Settings.Game.SelfColor;
+		/// <returns> <see cref="Color"/> of the <paramref name="actor"/>, taking <see cref="Actor.EffectiveOwner"/> into account. </returns>
+		public static Color ActorColor(Actor actor)
+		{
+			var effectiveOwner = actor.EffectiveOwner;
+			var owner = actor.Owner;
+			if (effectiveOwner != null && effectiveOwner.Disguised && actor.World.RenderPlayer != null)
+				owner = effectiveOwner.Owner;
 
-				if (apparentOwner.IsAlliedWith(player))
-					return Game.Settings.Game.AllyColor;
+			return owner.Color;
+		}
 
-				if (!apparentOwner.NonCombatant)
-					return Game.Settings.Game.EnemyColor;
-			}
+		public static Color PlayerRelationshipColor(Player observee, Player observer)
+		{
+			if (observer == observee)
+				return Game.Settings.Game.SelfColor;
 
-			return Game.Settings.Game.NeutralColor;
+			if (observee.IsAlliedWith(observer))
+				return Game.Settings.Game.AllyColor;
+
+			if (observee.NonCombatant)
+				return Game.Settings.Game.NeutralColor;
+
+			return Game.Settings.Game.EnemyColor;
 		}
 
 		internal void PlayerDisconnected(Player p)

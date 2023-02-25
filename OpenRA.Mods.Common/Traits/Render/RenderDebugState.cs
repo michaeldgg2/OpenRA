@@ -67,7 +67,7 @@ namespace OpenRA.Mods.Common.Traits.Render
 
 		Color GetColor()
 		{
-			return self.EffectiveOwner != null && self.EffectiveOwner.Disguised ? self.EffectiveOwner.Owner.Color : self.Owner.Color;
+			return Player.ActorColor(self);
 		}
 
 		IEnumerable<IRenderable> IRenderAnnotationsWhenSelected.RenderAnnotations(Actor self, WorldRenderer wr)

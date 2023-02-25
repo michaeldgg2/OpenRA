@@ -55,7 +55,7 @@ namespace OpenRA.Mods.Common.Widgets
 				var self = p.Instances[0].Self;
 				var time = WidgetUtils.FormatTime(p.RemainingTicks, false, self.World.Timestep);
 				var text = Format.F(p.Info.Name, time);
-				var playerColor = Game.Settings.Game.UsePlayerStanceColors ? Player.PlayerRelationshipColor(self) : self.Owner.Color;
+				var playerColor = Player.ActorColor(self);
 				var color = !p.Ready || Game.LocalTick % 50 < 25 ? playerColor : Color.White;
 
 				return (text, color);

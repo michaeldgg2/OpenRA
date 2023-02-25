@@ -136,6 +136,9 @@ namespace OpenRA.Mods.Common.Traits
 			foreach (var p in w.Players)
 				foreach (var q in w.Players)
 					SetupPlayerMasks(p, q);
+
+			if (localPlayer != null)
+				Player.SetupRelationshipColors(w.Players, localPlayer);
 		}
 
 		static void SetupPlayerMasks(Player p, Player q)
