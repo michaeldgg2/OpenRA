@@ -84,11 +84,8 @@ namespace OpenRA.Mods.Common.Graphics
 			cr.DrawLine(start + r, z + r, 1, barColor2);
 		}
 
-		Color GetHealthColor(IHealth health)
+		static Color GetHealthColor(IHealth health)
 		{
-			if (Game.Settings.Game.UsePlayerStanceColors)
-				return Player.PlayerRelationshipColor(actor);
-
 			return health.DamageState == DamageState.Critical ? Color.Red :
 				health.DamageState == DamageState.Heavy ? Color.Yellow : Color.LimeGreen;
 		}
