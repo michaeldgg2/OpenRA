@@ -270,16 +270,17 @@ namespace OpenRA
 
 		public static Color PlayerRelationshipColor(Player observee, Player observer)
 		{
+			var settings = Game.Settings.Game;
 			if (observer == observee)
-				return Game.Settings.Game.SelfColor;
+				return settings.UseSelfColor ? settings.SelfColor : observee.color;
 
 			if (observee.IsAlliedWith(observer))
-				return Game.Settings.Game.AllyColor;
+				return settings.UseAllyColor ? settings.AllyColor : observee.color;
 
 			if (observee.NonCombatant)
-				return Game.Settings.Game.NeutralColor;
+				return settings.UseNeutralColor ? settings.NeutralColor : observee.color;
 
-			return Game.Settings.Game.EnemyColor;
+			return settings.UseEnemyColor ? settings.EnemyColor : observee.color;
 		}
 
 		internal void PlayerDisconnected(Player p)

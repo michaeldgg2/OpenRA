@@ -19,7 +19,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 {
 	public static class SettingsUtils
 	{
-		public static void BindCheckboxPref(Widget parent, string id, object group, string pref)
+		public static CheckboxWidget BindCheckboxPref(Widget parent, string id, object group, string pref)
 		{
 			var field = group.GetType().GetField(pref);
 			if (field == null)
@@ -28,6 +28,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			var cb = parent.Get<CheckboxWidget>(id);
 			cb.IsChecked = () => (bool)field.GetValue(group);
 			cb.OnClick = () => field.SetValue(group, cb.IsChecked() ^ true);
+			return cb;
 		}
 
 		public static void BindSliderPref(Widget parent, string id, object group, string pref)

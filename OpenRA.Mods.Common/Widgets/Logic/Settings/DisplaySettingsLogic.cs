@@ -141,7 +141,13 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			SettingsUtils.BindCheckboxPref(panel, "FRAME_LIMIT_CHECKBOX", ds, "CapFramerate");
 			SettingsUtils.BindCheckboxPref(panel, "FRAME_LIMIT_GAMESPEED_CHECKBOX", ds, "CapFramerateToGameFps");
 			SettingsUtils.BindIntSliderPref(panel, "FRAME_LIMIT_SLIDER", ds, "MaxFramerate");
-			SettingsUtils.BindCheckboxPref(panel, "PLAYER_STANCE_COLORS_CHECKBOX", gs, "UsePlayerStanceColors");
+
+			bool IsNotInShellmap() => worldRenderer.World.Type != WorldType.Shellmap;
+			SettingsUtils.BindCheckboxPref(panel, "PLAYER_SELF_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseSelfColor").IsDisabled = IsNotInShellmap;
+			SettingsUtils.BindCheckboxPref(panel, "PLAYER_ALLY_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseAllyColor").IsDisabled = IsNotInShellmap;
+			SettingsUtils.BindCheckboxPref(panel, "PLAYER_ENEMY_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseEnemyColor").IsDisabled = IsNotInShellmap;
+			SettingsUtils.BindCheckboxPref(panel, "PLAYER_NEUTRAL_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseNeutralColor").IsDisabled = IsNotInShellmap;
+
 			if (panel.GetOrNull<CheckboxWidget>("PAUSE_SHELLMAP_CHECKBOX") != null)
 				SettingsUtils.BindCheckboxPref(panel, "PAUSE_SHELLMAP_CHECKBOX", gs, "PauseShellmap");
 
@@ -205,7 +211,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 
 			var minResolution = viewportSizes.MinEffectiveResolution;
 			var resolution = Game.Renderer.Resolution;
-			var disableUIScale = worldRenderer.World.Type != WorldType.Shellmap ||
+			var disableUIScale = IsNotInShellmap() ||
 				resolution.Width * ds.UIScale < 1.25f * minResolution.Width ||
 				resolution.Height * ds.UIScale < 1.25f * minResolution.Height;
 
@@ -238,7 +244,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 
 			var escPressed = false;
 			var nameTextfield = panel.Get<TextFieldWidget>("PLAYERNAME");
-			nameTextfield.IsDisabled = () => worldRenderer.World.Type != WorldType.Shellmap;
+			nameTextfield.IsDisabled = IsNotInShellmap;
 			nameTextfield.Text = Settings.SanitizedPlayerName(ps.Name);
 			nameTextfield.OnLoseFocus = () =>
 			{
@@ -269,13 +275,12 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 
 			var colorManager = modData.DefaultRules.Actors[SystemActors.World].TraitInfo<ColorPickerManagerInfo>();
 
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => worldRenderer.World.Type != WorldType.Shellmap, "PLAYERCOLOR", Game.Settings.Player, "Color");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsNotInShellmap, "PLAYERCOLOR", Game.Settings.Player, "Color");
 
-			bool IsColorPickerDisabled() => !Game.Settings.Game.UsePlayerStanceColors || worldRenderer.World.Type != WorldType.Shellmap;
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "SELFCOLOR", gs, "SelfColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "ALLYCOLOR", gs, "AllyColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "ENEMYCOLOR", gs, "EnemyColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "NEUTRALCOLOR", gs, "NeutralColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseSelfColor || IsNotInShellmap(), "SELFCOLOR", gs, "SelfColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseAllyColor || IsNotInShellmap(), "ALLYCOLOR", gs, "AllyColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseEnemyColor || IsNotInShellmap(), "ENEMYCOLOR", gs, "EnemyColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseNeutralColor || IsNotInShellmap(), "NEUTRALCOLOR", gs, "NeutralColor");
 
 			SettingsUtils.AdjustSettingsScrollPanelLayout(scrollPanel);
 
