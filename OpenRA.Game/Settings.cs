@@ -268,6 +268,10 @@ namespace OpenRA
 		public StatusBarsType StatusBars = StatusBarsType.Standard;
 		public TargetLinesType TargetLines = TargetLinesType.Manual;
 		public bool UsePlayerStanceColors = false;
+		public Color SelfColor = Color.FromArgb(50, 205, 50);
+		public Color AllyColor = Color.FromArgb(255, 255, 0);
+		public Color EnemyColor = Color.FromArgb(255, 0, 0);
+		public Color NeutralColor = Color.FromArgb(210, 180, 140);
 
 		public bool AllowDownloading = true;
 

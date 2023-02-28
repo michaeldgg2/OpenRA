@@ -58,7 +58,7 @@ Container@DISPLAY_PANEL:
 									IgnoreChildMouseOver: true
 									PanelAlign: Right
 									Children:
-										ColorBlock@COLORBLOCK:
+										ColorBlock@PLAYERCOLORBLOCK:
 											X: 5
 											Y: 6
 											Width: PARENT_RIGHT - 35
@@ -359,3 +359,97 @@ Container@DISPLAY_PANEL:
 									Font: Tiny
 									Text: Display and OpenGL changes require restart
 									Align: Center
+				Background@SECTION_HEADER:
+					X: 5
+					Width: PARENT_RIGHT - 24 - 10
+					Height: 13
+					Background: separator
+					ClickThrough: True
+					Children:
+						Label@LABEL:
+							Width: PARENT_RIGHT
+							Height: PARENT_BOTTOM
+							Font: TinyBold
+							Align: Center
+							Text: Accessibility
+				Container@ROW:
+					Width: PARENT_RIGHT - 24
+					Height: 25
+					Children:
+						Container@SELFCOLOR_CONTAINER:
+							X: PARENT_RIGHT / 2 + 10
+							Width: PARENT_RIGHT / 2 - 20
+							Children:
+								DropDownButton@SELFCOLOR:
+									X: PARENT_RIGHT - 80
+									Width: 75
+									Height: 25
+									IgnoreChildMouseOver: true
+									PanelAlign: Right
+									Children:
+										ColorBlock@SELFCOLORBLOCK:
+											X: 5
+											Y: 6
+											Width: PARENT_RIGHT - 35
+											Height: PARENT_BOTTOM - 12
+				Container@ROW:
+					Width: PARENT_RIGHT - 24
+					Height: 25
+					Children:
+						Container@ALLYCOLOR_CONTAINER:
+							X: PARENT_RIGHT / 2 + 10
+							Width: PARENT_RIGHT / 2 - 20
+							Children:
+								DropDownButton@ALLYCOLOR:
+									X: PARENT_RIGHT - 80
+									Width: 75
+									Height: 25
+									IgnoreChildMouseOver: true
+									PanelAlign: Right
+									Children:
+										ColorBlock@ALLYCOLORBLOCK:
+											X: 5
+											Y: 6
+											Width: PARENT_RIGHT - 35
+											Height: PARENT_BOTTOM - 12
+				Container@ROW:
+					Width: PARENT_RIGHT - 24
+					Height: 25
+					Children:
+						Container@ENEMYCOLOR_CONTAINER:
+							X: PARENT_RIGHT / 2 + 10
+							Width: PARENT_RIGHT / 2 - 20
+							Children:
+								DropDownButton@ENEMYCOLOR:
+									X: PARENT_RIGHT - 80
+									Width: 75
+									Height: 25
+									IgnoreChildMouseOver: true
+									PanelAlign: Right
+									Children:
+										ColorBlock@ENEMYCOLORBLOCK:
+											X: 5
+											Y: 6
+											Width: PARENT_RIGHT - 35
+											Height: PARENT_BOTTOM - 12
+				Container@ROW:
+					Width: PARENT_RIGHT - 24
+					Height: 25
+					Children:
+						Container@NEUTRALCOLOR_CONTAINER:
+							X: PARENT_RIGHT / 2 + 10
+							Width: PARENT_RIGHT / 2 - 20
+							Children:
+								DropDownButton@NEUTRALCOLOR:
+									X: PARENT_RIGHT - 80
+									Width: 75
+									Height: 25
+									IgnoreChildMouseOver: true
+									PanelAlign: Right
+									Children:
+										ColorBlock@NEUTRALCOLORBLOCK:
+											X: 5
+											Y: 6
+											Width: PARENT_RIGHT - 35
+											Height: PARENT_BOTTOM - 12
+				Container@SPACER:

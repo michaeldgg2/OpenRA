@@ -18,10 +18,6 @@ Metrics:
 	IncompatibleProtectedGameColor: 8B0000
 	IncompatibleVersionColor: FF0000
 	IncompatibleWaitingGameColor: 32CD32
-	PlayerStanceColorAllies: FFFF00
-	PlayerStanceColorEnemies: FF0000
-	PlayerStanceColorNeutrals: D2B48C
-	PlayerStanceColorSelf: 32CD32
 	ProtectedGameColor: FF0000
 	SpawnColor: FFFFFF
 	SpawnContrastColor: 000000

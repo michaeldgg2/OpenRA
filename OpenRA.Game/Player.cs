@@ -19,7 +19,6 @@ using OpenRA.Primitives;
 using OpenRA.Scripting;
 using OpenRA.Support;
 using OpenRA.Traits;
-using OpenRA.Widgets;
 
 namespace OpenRA
 {
@@ -221,10 +220,10 @@ namespace OpenRA
 					logic.Activate(this);
 			}
 
-			stanceColors.Self = ChromeMetrics.Get<Color>("PlayerStanceColorSelf");
-			stanceColors.Allies = ChromeMetrics.Get<Color>("PlayerStanceColorAllies");
-			stanceColors.Enemies = ChromeMetrics.Get<Color>("PlayerStanceColorEnemies");
-			stanceColors.Neutrals = ChromeMetrics.Get<Color>("PlayerStanceColorNeutrals");
+			stanceColors.Self = Game.Settings.Game.SelfColor;
+			stanceColors.Allies = Game.Settings.Game.AllyColor;
+			stanceColors.Enemies = Game.Settings.Game.EnemyColor;
+			stanceColors.Neutrals = Game.Settings.Game.NeutralColor;
 
 			unlockRenderPlayer = PlayerActor.TraitsImplementing<IUnlocksRenderPlayer>().ToArray();
 			notifyDisconnected = PlayerActor.TraitsImplementing<INotifyPlayerDisconnected>().ToArray();

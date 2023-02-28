@@ -268,16 +268,14 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			};
 
 			var colorManager = modData.DefaultRules.Actors[SystemActors.World].TraitInfo<ColorPickerManagerInfo>();
-			colorManager.Color = ps.Color;
 
-			var colorDropdown = panel.Get<DropDownButtonWidget>("PLAYERCOLOR");
-			colorDropdown.IsDisabled = () => worldRenderer.World.Type != WorldType.Shellmap;
-			colorDropdown.OnMouseDown = _ => ColorPickerLogic.ShowColorDropDown(colorDropdown, colorManager, worldRenderer, () =>
-			{
-				Game.Settings.Player.Color = colorManager.Color;
-				Game.Settings.Save();
-			});
-			colorDropdown.Get<ColorBlockWidget>("COLORBLOCK").GetColor = () => ps.Color;
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => worldRenderer.World.Type != WorldType.Shellmap, "PLAYERCOLOR", Game.Settings.Player, "Color");
+
+			bool IsColorPickerDisabled() => !Game.Settings.Game.UsePlayerStanceColors || worldRenderer.World.Type != WorldType.Shellmap;
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "SELFCOLOR", gs, "SelfColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "ALLYCOLOR", gs, "AllyColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "ENEMYCOLOR", gs, "EnemyColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsColorPickerDisabled, "NEUTRALCOLOR", gs, "NeutralColor");
 
 			SettingsUtils.AdjustSettingsScrollPanelLayout(scrollPanel);
 

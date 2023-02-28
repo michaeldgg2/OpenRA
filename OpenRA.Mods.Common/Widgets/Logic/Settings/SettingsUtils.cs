@@ -10,6 +10,9 @@
 #endregion
 
 using System;
+using OpenRA.Graphics;
+using OpenRA.Mods.Common.Traits;
+using OpenRA.Primitives;
 using OpenRA.Widgets;
 
 namespace OpenRA.Mods.Common.Widgets.Logic
@@ -47,6 +50,26 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			var ss = parent.Get<SliderWidget>(id);
 			ss.Value = (float)(int)field.GetValue(group);
 			ss.OnChange += x => field.SetValue(group, (int)x);
+		}
+
+		public static void BindColorWidget(Widget panel, WorldRenderer worldRenderer, ColorPickerManagerInfo manager, Func<bool> isDisabled, string stance, object group, string pref)
+		{
+			var field = group.GetType().GetField(pref);
+			if (field == null)
+				throw new InvalidOperationException($"{group.GetType().Name} does not contain a preference type {pref}");
+
+			var colorDropdown = panel.Get<DropDownButtonWidget>(stance);
+			colorDropdown.IsDisabled = isDisabled;
+			colorDropdown.OnMouseDown = _ =>
+			{
+				manager.Color = (Color)field.GetValue(group);
+				ColorPickerLogic.ShowColorDropDown(colorDropdown, manager, worldRenderer, () =>
+				{
+					field.SetValue(group, manager.Color);
+					Game.Settings.Save();
+				});
+			};
+			colorDropdown.Get<ColorBlockWidget>(stance + "BLOCK").GetColor = () => (Color)field.GetValue(group);
 		}
 
 		public static void AdjustSettingsScrollPanelLayout(ScrollPanelWidget scrollPanel)
