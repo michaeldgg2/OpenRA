@@ -216,6 +216,7 @@ namespace OpenRA
 
 		public int BatchSize = 8192;
 		public int SheetSize = 2048;
+		public bool UseNeonPlayerColors = false;
 	}
 
 	public class SoundSettings

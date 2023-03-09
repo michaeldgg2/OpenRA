@@ -148,6 +148,8 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			SettingsUtils.BindCheckboxPref(panel, "PLAYER_ENEMY_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseEnemyColor").IsDisabled = IsNotInShellmap;
 			SettingsUtils.BindCheckboxPref(panel, "PLAYER_NEUTRAL_RELATIONSHIP_COLOR_CHECKBOX", gs, "UseNeutralColor").IsDisabled = IsNotInShellmap;
 
+			SettingsUtils.BindCheckboxPref(panel, "NEON_COLOR_CHECKBOX", ds, "UseNeonPlayerColors").IsDisabled = IsNotInShellmap;
+
 			if (panel.GetOrNull<CheckboxWidget>("PAUSE_SHELLMAP_CHECKBOX") != null)
 				SettingsUtils.BindCheckboxPref(panel, "PAUSE_SHELLMAP_CHECKBOX", gs, "PauseShellmap");
 

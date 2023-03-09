@@ -35,6 +35,14 @@ namespace OpenRA.Graphics
 			if (!remapIndices.Contains(index))
 				return original;
 
+			if (Game.Settings.Graphics.UseNeonPlayerColors)
+			{
+				var (rc, gc, bc) = Color.HsvToRgb(hue, saturation, this.value);
+
+				// Convert linear back to SRGB and pre-multiply by the alpha
+				return Color.FromLinear(original.A, rc, gc, bc);
+			}
+
 			// Color remapping is applied in a linear color space, so start
 			// by undoing the pre-multiplied alpha and gamma corrections
 			var (r, g, b) = original.ToLinear();

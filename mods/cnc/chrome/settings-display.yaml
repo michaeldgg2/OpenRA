@@ -352,6 +352,17 @@ Container@DISPLAY_PANEL:
 					Width: PARENT_RIGHT - 24
 					Height: 25
 					Children:
+						Container@NEON_COLOR_CHECKBOX_CONTAINER:
+							X: 10
+							Width: PARENT_RIGHT / 2 - 10
+							Children:
+								Checkbox@NEON_COLOR_CHECKBOX:
+									Width: PARENT_RIGHT
+									Height: 20
+									Font: Regular
+									Text: Use neon player colors.
+									TooltipText: When remapping player colors onto palettes, ignore their brightness
+									TooltipContainer: SETTINGS_TOOLTIP_CONTAINER
 						Container@SELFCOLOR_CONTAINER:
 							X: PARENT_RIGHT / 2 + 10
 							Width: PARENT_RIGHT / 2 - 20
