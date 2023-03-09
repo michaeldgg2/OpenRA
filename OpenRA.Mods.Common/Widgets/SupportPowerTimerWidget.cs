@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Common.Widgets
 	public class SupportPowerTimerWidget : Widget
 	{
 		public readonly string Font = "Bold";
-		public readonly string Format = "{0}: {1}";
+		public readonly string Format = "{0}'s {1}: {2}";
 		public readonly TextAlign Align = TextAlign.Left;
 		public readonly TimerOrder Order = TimerOrder.Descending;
 
@@ -57,7 +57,7 @@ namespace OpenRA.Mods.Common.Widgets
 			{
 				var self = p.Instances[0].Self;
 				var time = WidgetUtils.FormatTime(p.RemainingTicks, false, self.World.Timestep);
-				var text = Format.F(p.Info.Name, time);
+				var text = Format.F(self.Owner.PlayerName, p.Info.Name, time);
 				var playerColor = Player.ActorColor(self);
 				var color = !p.Ready || Game.LocalTick % 50 < 25 ? playerColor : Color.White;
 
