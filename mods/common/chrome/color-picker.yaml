@@ -5,7 +5,7 @@ Background@COLOR_CHOOSER:
 		PaletteCustomRows: 1
 	Background: dialog2
 	Width: 326
-	Height: 154
+	Height: 170
 	Children:
 		Button@RANDOM_BUTTON:
 			Key: tab
@@ -52,7 +52,19 @@ Background@COLOR_CHOOSER:
 					X: 2
 					Y: 2
 					Width: PARENT_RIGHT - 4
-					Height: PARENT_BOTTOM - 4
+					Height: PARENT_BOTTOM - 20
+				Background@SLIDER: panel-black
+					X: 2
+					Y: PARENT_BOTTOM - 18
+					Width: PARENT_RIGHT - 4
+					Height: 17
+					Children:
+						BrightnessSlider@V:
+							X: 2
+							Y: 2
+							Width: PARENT_RIGHT - 4
+							Height: PARENT_BOTTOM - 4
+							Ticks: 5
 		Background@PALETTE_TAB:
 			Background: dialog3
 			X: 5

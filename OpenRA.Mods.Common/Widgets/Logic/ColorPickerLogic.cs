@@ -26,14 +26,32 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 
 		[ObjectCreator.UseCtor]
 		public ColorPickerLogic(Widget widget, ModData modData, World world, Color initialColor, string initialFaction, Action<Color> onChange,
-			Dictionary<string, MiniYaml> logicArgs)
+			Dictionary<string, MiniYaml> logicArgs, bool darkEnabled = false)
 		{
 			var mixer = widget.Get<ColorMixerWidget>("MIXER");
+			var slider = widget.Get<BrightnessSliderWidget>("V");
 
 			// Set the initial state
 			// All users need to use the same TraitInfo instance, chosen as the default mod rules
 			var colorManager = modData.DefaultRules.Actors[SystemActors.World].TraitInfo<ColorPickerManagerInfo>();
-			mixer.SetColorLimits(colorManager.HsvSaturationRange[0], colorManager.HsvSaturationRange[1], colorManager.V);
+			slider.OnChange += (v) =>
+			{
+				mixer.SetColorLimits(colorManager.HsvSaturationRange[0], colorManager.HsvSaturationRange[1], Remap(v, 0f, 1f, 0.1f, 1f));
+				onChange(mixer.Color);
+			};
+
+			if (darkEnabled)
+			{
+				slider.UpdateValue(Remap(initialColor.ToAhsv().V, 0.1f, 1f, 0f, 1f));
+			}
+			else
+			{
+				mixer.SetColorLimits(colorManager.HsvSaturationRange[0], colorManager.HsvSaturationRange[1], 0.95f);
+				onChange(mixer.Color);
+				slider.IsVisible = () => false;
+				widget.Get<BackgroundWidget>("SLIDER").IsVisible = () => false;
+			}
+
 			mixer.OnChange += () => onChange(mixer.Color);
 			mixer.Set(initialColor);
 
@@ -191,7 +209,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			}
 		}
 
-		public static void ShowColorDropDown(DropDownButtonWidget color, ColorPickerManagerInfo colorManager, WorldRenderer worldRenderer, Action onExit = null)
+		public static void ShowColorDropDown(DropDownButtonWidget color, ColorPickerManagerInfo colorManager, WorldRenderer worldRenderer, Action onExit = null, bool darkEnabled = true)
 		{
 			color.RemovePanel();
 
@@ -199,10 +217,16 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			{
 				{ "onChange", (Action<Color>)(c => colorManager.Color = c) },
 				{ "initialColor", colorManager.Color },
-				{ "initialFaction", null }
+				{ "initialFaction", null },
+				{ "darkEnabled", darkEnabled }
 			});
 
 			color.AttachPanel(colorChooser, onExit);
+		}
+
+		public static float Remap(float value, float from1, float to1, float from2, float to2)
+		{
+			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 		}
 
 		public override void Tick()

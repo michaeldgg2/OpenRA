@@ -53,7 +53,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			ss.OnChange += x => field.SetValue(group, (int)x);
 		}
 
-		public static void BindColorWidget(Widget panel, WorldRenderer worldRenderer, ColorPickerManagerInfo manager, Func<bool> isDisabled, string stance, object group, string pref)
+		public static void BindColorWidget(Widget panel, WorldRenderer worldRenderer, ColorPickerManagerInfo manager, Func<bool> isDisabled, string stance, object group, string pref, bool darkEnabled)
 		{
 			var field = group.GetType().GetField(pref);
 			if (field == null)
@@ -68,7 +68,7 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 				{
 					field.SetValue(group, manager.Color);
 					Game.Settings.Save();
-				});
+				}, darkEnabled);
 			};
 			colorDropdown.Get<ColorBlockWidget>(stance + "BLOCK").GetColor = () => (Color)field.GetValue(group);
 		}

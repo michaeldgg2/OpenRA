@@ -260,7 +260,8 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 			{
 				{ "onChange", (Action<Color>)(c => colorManager.Color = c) },
 				{ "initialColor", client.Color },
-				{ "initialFaction", client.Faction }
+				{ "initialFaction", client.Faction },
+				{ "darkEnabled", false }
 			});
 
 			color.AttachPanel(colorChooser, onExit);

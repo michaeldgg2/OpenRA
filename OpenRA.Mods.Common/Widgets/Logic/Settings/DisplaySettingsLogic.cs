@@ -277,12 +277,12 @@ namespace OpenRA.Mods.Common.Widgets.Logic
 
 			var colorManager = modData.DefaultRules.Actors[SystemActors.World].TraitInfo<ColorPickerManagerInfo>();
 
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsNotInShellmap, "PLAYERCOLOR", Game.Settings.Player, "Color");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, IsNotInShellmap, "PLAYERCOLOR", Game.Settings.Player, "Color", false);
 
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseSelfColor || IsNotInShellmap(), "SELFCOLOR", gs, "SelfColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseAllyColor || IsNotInShellmap(), "ALLYCOLOR", gs, "AllyColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseEnemyColor || IsNotInShellmap(), "ENEMYCOLOR", gs, "EnemyColor");
-			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseNeutralColor || IsNotInShellmap(), "NEUTRALCOLOR", gs, "NeutralColor");
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseSelfColor || IsNotInShellmap(), "SELFCOLOR", gs, "SelfColor", true);
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseAllyColor || IsNotInShellmap(), "ALLYCOLOR", gs, "AllyColor", true);
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseEnemyColor || IsNotInShellmap(), "ENEMYCOLOR", gs, "EnemyColor", true);
+			SettingsUtils.BindColorWidget(panel, worldRenderer, colorManager, () => !gs.UseNeutralColor || IsNotInShellmap(), "NEUTRALCOLOR", gs, "NeutralColor", true);
 
 			SettingsUtils.AdjustSettingsScrollPanelLayout(scrollPanel);
 
