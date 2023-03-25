@@ -67,8 +67,20 @@ namespace OpenRA.Platforms.Default
 			inputHandler.ModifierKeys(mods);
 			MouseInput? pendingMotion = null;
 
-			while (SDL.SDL_PollEvent(out var e) != 0)
+			var skip = true;
+			while (true)
 			{
+				if (SDL.SDL_PollEvent(out var e) == 0)
+				{
+					if (skip)
+					{
+						skip = false;
+						continue;
+					}
+
+					break;
+				}
+
 				switch (e.type)
 				{
 					case SDL.SDL_EventType.SDL_QUIT:
