@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenRA.GameRules;
 using OpenRA.Graphics;
 using OpenRA.Mods.Common.Effects;
@@ -311,16 +312,17 @@ namespace OpenRA.Mods.Common.Projectiles
 
 		public virtual IEnumerable<IRenderable> Render(WorldRenderer wr)
 		{
-			if (info.ContrailLength > 0)
-				yield return contrail;
-
-			if (ticks >= length)
-				yield break;
-
-			foreach (var r in RenderAnimation(wr))
+			if (FlightLengthReached)
 			{
-				yield return r;
+				if (info.ContrailLength > 0)
+					return new[] { contrail };
 			}
+
+			var result = RenderAnimation(wr);
+			if (info.ContrailLength > 0)
+				result = new[] { contrail }.Concat(result);
+
+			return result;
 		}
 
 		protected IEnumerable<IRenderable> RenderAnimation(WorldRenderer wr)
