@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using OpenRA.Traits;
+using OpenRA.Widgets;
 
 namespace OpenRA.Mods.Common.Traits
 {
@@ -39,6 +40,9 @@ namespace OpenRA.Mods.Common.Traits
 		[Desc("Sequence of the actor that contains the icon.")]
 		public readonly string Icon = "icon";
 
+		[Desc("Should faction suffix be added for sequence " + nameof(Icon) + "?")]
+		public readonly bool UseFactionSuffix = true;
+
 		[PaletteReference(nameof(IconPaletteIsPlayerPalette))]
 		[Desc("Palette used for the production icon.")]
 		public readonly string IconPalette = "chrome";
@@ -61,6 +65,22 @@ namespace OpenRA.Mods.Common.Traits
 		public static string GetInitialFaction(ActorInfo ai, string defaultFaction)
 		{
 			return ai.TraitInfoOrDefault<BuildableInfo>()?.ForceFaction ?? defaultFaction;
+		}
+
+		public string GetIconSequence(Player renderPlayer, string image)
+		{
+			if (UseFactionSuffix)
+			{
+				var factionName = renderPlayer.Faction.InternalName;
+				if (ChromeMetrics.TryGet("FactionSuffix-" + factionName, out string factionOverride))
+					factionName = factionOverride;
+
+				var factionSequence = $"{Icon}.{factionName}";
+				if (renderPlayer.World.Map.Sequences.HasSequence(image, factionSequence))
+					return factionSequence;
+			}
+
+			return Icon;
 		}
 	}
 

@@ -161,7 +161,7 @@ namespace OpenRA.Mods.Common.Traits
 			{
 				var image = rsi.GetImage(actorInfo, owner.Faction.InternalName);
 				Icon = new Animation(owner.World, image);
-				Icon.Play(BuildableInfo.Icon);
+				Icon.Play(BuildableInfo.GetIconSequence(owner, image));
 				IconPalette = BuildableInfo.IconPalette;
 				IconPaletteIsPlayerPalette = BuildableInfo.IconPaletteIsPlayerPalette;
 				BuildPaletteOrder = BuildableInfo.BuildPaletteOrder;
