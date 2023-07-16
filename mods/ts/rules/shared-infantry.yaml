@@ -31,18 +31,13 @@ E1:
 		DefaultAttackSequence: attack
 	ProducibleWithLevel:
 		Prerequisites: barracks.upgraded
-	RenderSprites:
-		Image: e1.gdi
-		FactionImages:
-			gdi: e1.gdi
-			nod: e1.nod
 	RevealsShroud:
 		Range: 5c0
 
 E1R3:
 	Inherits: E1
 	RenderSprites:
-		Image: e1.gdi
+		Image: e1
 	ProducibleWithLevel:
 		Prerequisites: techlevel.low
 		InitialLevels: 3
@@ -78,11 +73,6 @@ ENGINEER:
 	Captures:
 		CaptureTypes: building
 		PlayerExperience: 10
-	RenderSprites:
-		Image: engineer.gdi
-		FactionImages:
-			gdi: engineer.gdi
-			nod: engineer.nod
 
 FLAMEGUY:
 	Inherits@1: ^ExistsInWorld

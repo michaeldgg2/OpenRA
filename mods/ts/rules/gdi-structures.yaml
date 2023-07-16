@@ -426,11 +426,6 @@ GADEPT:
 	Power:
 		Amount: -30
 	ProvidesPrerequisite@buildingname:
-	RenderSprites:
-		Image: gadept.gdi
-		FactionImages:
-			gdi: gadept.gdi
-			nod: gadept.nod
 
 GARADR:
 	Inherits: ^Building

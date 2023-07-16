@@ -36,11 +36,6 @@ MCV:
 		Voice: Move
 		NoTransformNotification: BuildingCannotPlaceAudio
 		NoTransformTextNotification: Cannot deploy here.
-	RenderSprites:
-		Image: mcv.gdi
-		FactionImages:
-			gdi: mcv.gdi
-			nod: mcv.nod
 
 HARV:
 	Inherits: ^Tank
@@ -93,11 +88,6 @@ HARV:
 	WithHarvestOverlay:
 		LocalOffset: 543,0,0
 		Palette: effect
-	RenderSprites:
-		Image: harv.gdi
-		FactionImages:
-			gdi: harv.gdi
-			nod: harv.nod
 	-DamagedByTerrain@VEINS:
 	-LeavesTrails@VEINS:
 	WithHarvesterPipsDecoration:
@@ -151,11 +141,7 @@ LPST:
 	GrantCondition@PREVIEWWORKAROUND:
 		Condition: real-actor
 	RenderSprites:
-		Image: lpst.gdi
 		PlayerPalette: playertem
-		FactionImages:
-			gdi: lpst.gdi
-			nod: lpst.nod
 	GrantConditionOnDeploy:
 		PauseOnCondition: empdisable || being-captured
 		DeployedCondition: deployed

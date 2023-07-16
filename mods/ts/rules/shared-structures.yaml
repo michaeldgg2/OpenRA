@@ -152,11 +152,6 @@ PROC:
 	Power:
 		Amount: -30
 	ProvidesPrerequisite@buildingname:
-	RenderSprites:
-		Image: proc.gdi
-		FactionImages:
-			gdi: proc.gdi
-			nod: proc.nod
 	GrantConditionOnPlayerResources:
 		Condition: contains-tiberium
 	Explodes:
@@ -195,11 +190,6 @@ GASILO:
 	RevealsShroud:
 		Range: 4c0
 		MaxHeightDelta: 3
-	RenderSprites:
-		Image: gasilo.gdi
-		FactionImages:
-			gdi: gasilo.gdi
-			nod: gasilo.nod
 	WithResourceLevelOverlay@FILLSTAGE:
 		RequiresCondition: !build-incomplete
 		Sequence: stages
