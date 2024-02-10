@@ -229,7 +229,7 @@ namespace OpenRA.Mods.Common.Traits
 
 		sealed class AttackActivity : Activity, IActivityNotifyStanceChanged
 		{
-			readonly AttackFollow attack;
+			readonly AttackFollow[] attacks;
 			readonly RevealsShroud[] revealsShroud;
 			readonly IMove move;
 			readonly bool forceAttack;
@@ -251,7 +251,7 @@ namespace OpenRA.Mods.Common.Traits
 
 			public AttackActivity(Actor self, AttackSource source, in Target target, bool allowMove, bool forceAttack, Color? targetLineColor = null)
 			{
-				attack = self.Trait<AttackFollow>();
+				attacks = self.TraitsImplementing<AttackFollow>().ToArray();
 				move = allowMove ? self.TraitOrDefault<IMove>() : null;
 				revealsShroud = self.TraitsImplementing<RevealsShroud>().ToArray();
 				rearmable = self.TraitOrDefault<Rearmable>();
@@ -268,8 +268,10 @@ namespace OpenRA.Mods.Common.Traits
 					|| target.Type == TargetType.FrozenActor || target.Type == TargetType.Terrain)
 				{
 					lastVisibleTarget = Target.FromPos(target.CenterPosition);
-					lastVisibleMaximumRange = attack.GetMaximumRangeVersusTarget(target);
-					lastVisibleMinimumRange = attack.GetMinimumRangeVersusTarget(target);
+					//lastVisibleMaximumRange = attacks.GetMaximumRangeVersusTarget(target);
+					lastVisibleMaximumRange = new WDist(attacks.Max(a => a.GetMaximumRangeVersusTarget(this.target).Length));
+					lastVisibleMinimumRange = new WDist(attacks.Max(a => a.GetMinimumRangeVersusTarget(this.target).Length));
+					//lastVisibleMinimumRange = attacks.GetMinimumRangeVersusTarget(target);
 
 					if (target.Type == TargetType.Actor)
 					{
@@ -293,25 +295,25 @@ namespace OpenRA.Mods.Common.Traits
 
 				// Check that AttackFollow hasn't cancelled the target by modifying attack.Target
 				// Having both this and AttackFollow modify that field is a horrible hack.
-				if (hasTicked && attack.RequestedTarget.Type == TargetType.Invalid)
+				if (hasTicked && attacks.All(a => a.RequestedTarget.Type == TargetType.Invalid))
 					return true;
 
-				if (attack.IsTraitPaused)
+				if (attacks.All(a => !a.IsTraitPaused))
 					return false;
 
 				target = target.Recalculate(self.Owner, out var targetIsHiddenActor);
-				attack.SetRequestedTarget(target, forceAttack);
+				Array.ForEach(attacks, a => a.SetRequestedTarget(target, forceAttack));
 				hasTicked = true;
 
 				if (!targetIsHiddenActor && target.Type == TargetType.Actor)
 				{
 					lastVisibleTarget = Target.FromTargetPositions(target);
-					lastVisibleMaximumRange = attack.GetMaximumRangeVersusTarget(target);
-					lastVisibleMinimumRange = attack.GetMinimumRange();
+					lastVisibleMaximumRange = new WDist(attacks.Max(a => a.GetMaximumRangeVersusTarget(target).Length));
+					lastVisibleMinimumRange = new WDist(attacks.Min(a => a.GetMinimumRange().Length));
 					lastVisibleOwner = target.Actor.Owner;
 					lastVisibleTargetTypes = target.Actor.GetEnabledTargetTypes();
 
-					var leeway = attack.Info.RangeMargin.Length;
+					var leeway = attacks.Max(a => a.Info.RangeMargin.Length);
 					if (leeway != 0 && move != null && target.Actor.Info.HasTraitInfo<IMoveInfo>())
 					{
 						var preferMinRange = Math.Min(lastVisibleMinimumRange.Length + leeway, lastVisibleMaximumRange.Length);
@@ -326,7 +328,7 @@ namespace OpenRA.Mods.Common.Traits
 				else if (target.Type == TargetType.FrozenActor && !lastVisibleTarget.IsValidFor(self))
 				{
 					lastVisibleTarget = Target.FromTargetPositions(target);
-					lastVisibleMaximumRange = attack.GetMaximumRangeVersusTarget(target);
+					lastVisibleMaximumRange = new WDist(attacks.Max(a => a.GetMaximumRangeVersusTarget(target).Length));
 					lastVisibleOwner = target.FrozenActor.Owner;
 					lastVisibleTargetTypes = target.FrozenActor.TargetTypes;
 				}
@@ -336,7 +338,7 @@ namespace OpenRA.Mods.Common.Traits
 				useLastVisibleTarget = targetIsHiddenActor || !target.IsValidFor(self);
 
 				// Most actors want to be able to see their target before shooting
-				if (target.Type == TargetType.FrozenActor && !attack.Info.TargetFrozenActors && !forceAttack)
+				if (target.Type == TargetType.FrozenActor) //&& !attacks.Info.TargetFrozenActors && !forceAttack)
 				{
 					var rs = revealsShroud
 						.Where(t => !t.IsTraitDisabled)
@@ -359,35 +361,35 @@ namespace OpenRA.Mods.Common.Traits
 
 				// If all valid weapons have depleted their ammo and Rearmable trait exists, return to RearmActor to reload
 				// and resume the activity after reloading if AbortOnResupply is set to 'false'
-				if (rearmable != null && !useLastVisibleTarget && attack.Armaments.All(x => x.IsTraitPaused || !x.Weapon.IsValidAgainst(target, self.World, self)))
-				{
-					// Attack moves never resupply
-					if (source == AttackSource.AttackMove)
-						return true;
+				//if (rearmable != null && !useLastVisibleTarget && attacks.Armaments.All(x => x.IsTraitPaused || !x.Weapon.IsValidAgainst(target, self.World, self)))
+				//{
+				//	// Attack moves never resupply
+				//	if (source == AttackSource.AttackMove)
+				//		return true;
 
-					// AbortOnResupply cancels the current activity (after resupplying) plus any queued activities
-					if (attack.Info.AbortOnResupply)
-						NextActivity?.Cancel(self);
+				//	// AbortOnResupply cancels the current activity (after resupplying) plus any queued activities
+				//	if (attacks.Info.AbortOnResupply)
+				//		NextActivity?.Cancel(self);
 
-					if (isAircraft)
-						QueueChild(new ReturnToBase(self));
-					else
-					{
-						var target = self.World.ActorsHavingTrait<Reservable>()
-							.Where(a => !a.IsDead && a.IsInWorld
-								&& a.Owner.IsAlliedWith(self.Owner) &&
-								rearmable.Info.RearmActors.Contains(a.Info.Name))
-							.OrderBy(a => a.Owner == self.Owner ? 0 : 1)
-							.ThenBy(p => (self.Location - p.Location).LengthSquared)
-							.FirstOrDefault();
+				//	if (isAircraft)
+				//		QueueChild(new ReturnToBase(self));
+				//	else
+				//	{
+				//		var target = self.World.ActorsHavingTrait<Reservable>()
+				//			.Where(a => !a.IsDead && a.IsInWorld
+				//				&& a.Owner.IsAlliedWith(self.Owner) &&
+				//				rearmable.Info.RearmActors.Contains(a.Info.Name))
+				//			.OrderBy(a => a.Owner == self.Owner ? 0 : 1)
+				//			.ThenBy(p => (self.Location - p.Location).LengthSquared)
+				//			.FirstOrDefault();
 
-						if (target != null)
-							QueueChild(new Resupply(self, target, new WDist(512)));
-					}
+				//		if (target != null)
+				//			QueueChild(new Resupply(self, target, new WDist(512)));
+				//	}
 
-					returnToBase = true;
-					return attack.Info.AbortOnResupply;
-				}
+				//	returnToBase = true;
+				//	return attacks.Info.AbortOnResupply;
+				//}
 
 				var pos = self.CenterPosition;
 				var checkTarget = useLastVisibleTarget ? lastVisibleTarget : target;
@@ -414,7 +416,7 @@ namespace OpenRA.Mods.Common.Traits
 			protected override void OnLastRun(Actor self)
 			{
 				// Cancel the requested target, but keep firing on it while in range
-				attack.ClearRequestedTarget();
+				Array.ForEach(attacks, a => a.ClearRequestedTarget());
 			}
 
 			void IActivityNotifyStanceChanged.StanceChanged(Actor self, AutoTarget autoTarget, UnitStance oldStance, UnitStance newStance)
@@ -425,18 +427,19 @@ namespace OpenRA.Mods.Common.Traits
 
 				// If lastVisibleTarget is invalid we could never view the target in the first place, so we just drop it here too
 				if (!lastVisibleTarget.IsValidFor(self) || !autoTarget.HasValidTargetPriority(self, lastVisibleOwner, lastVisibleTargetTypes))
-					attack.ClearRequestedTarget();
+					Array.ForEach(attacks, a => a.ClearRequestedTarget());
 			}
 
 			public override IEnumerable<TargetLineNode> TargetLineNodes(Actor self)
 			{
 				if (targetLineColor != null)
 				{
-					if (returnToBase)
-						foreach (var n in ChildActivity.TargetLineNodes(self))
-							yield return n;
-					if (!returnToBase || !attack.Info.AbortOnResupply)
-						yield return new TargetLineNode(useLastVisibleTarget ? lastVisibleTarget : target, targetLineColor.Value);
+					//if (returnToBase)
+					//	foreach (var n in ChildActivity.TargetLineNodes(self))
+					//		yield return n;
+					//if (!returnToBase || !attacks.Info.AbortOnResupply)
+					//	yield return new TargetLineNode(useLastVisibleTarget ? lastVisibleTarget : target, targetLineColor.Value);
+					yield break;
 				}
 			}
 		}
