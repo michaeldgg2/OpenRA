@@ -210,6 +210,7 @@ namespace OpenRA
 			else
 				TextNotificationsManager.Debug($"Reloading rule files: {string.Join(", ", ruleFiles)}");
 
+			// TODO: exception handling: file access error, syntax error, etc.
 			var yamlNodes = MiniYaml.LoadWithoutInherits(modData.DefaultFileSystem, ruleFiles, null);
 			static bool FilterNode(MiniYamlNode node) => node.Key.StartsWith(ActorInfo.AbstractActorPrefix);
 			var unresolvedRules = LoadFilteredYamlToDictionary(modData.DefaultFileSystem, yamlNodes, "UnresolvedRulesYaml", FilterNode);
