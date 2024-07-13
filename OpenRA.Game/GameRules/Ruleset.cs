@@ -235,7 +235,8 @@ namespace OpenRA
 			}
 
 			CallRulesetLoadedOnActorsList(actorInfos);
-			world.RecreateActors();
+			if (Game.Settings.Debug.RecreateActorsAfterRulesetReload)
+				world.RecreateActors();
 			//world.Actors.Where(a => actorInfos.Select(i => i.Name).Contains(a.Info.Name))
 			//	.ToList().ForEach(a => a.LoadCachedTraits());
 		}
