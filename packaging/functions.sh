@@ -11,7 +11,6 @@
 #   SRC_PATH: Path to the root OpenRA directory
 #   DEST_PATH: Path to the root of the install destination (will be created if necessary)
 #   TARGETPLATFORM: Platform type (win-x86, win-x64, osx-x64, osx-arm64, linux-x64, linux-arm64, unix-generic)
-#   RUNTIME: Runtime type (net8)
 #   COPY_GENERIC_LAUNCHER: If set to True the OpenRA.exe will also be copied (True, False)
 #   COPY_CNC_DLL: If set to True the OpenRA.Mods.Cnc.dll will also be copied (True, False)
 #   COPY_D2K_DLL: If set to True the OpenRA.Mods.D2k.dll will also be copied (True, False)
@@ -29,10 +28,9 @@ install_assemblies() (
 	SRC_PATH="${1}"
 	DEST_PATH="${2}"
 	TARGETPLATFORM="${3}"
-	RUNTIME="${4}"
-	COPY_GENERIC_LAUNCHER="${5}"
-	COPY_CNC_DLL="${6}"
-	COPY_D2K_DLL="${7}"
+	COPY_GENERIC_LAUNCHER="${4}"
+	COPY_CNC_DLL="${5}"
+	COPY_D2K_DLL="${6}"
 
 	ORIG_PWD=$(pwd)
 	cd "${SRC_PATH}"
