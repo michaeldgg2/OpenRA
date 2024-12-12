@@ -87,11 +87,11 @@ namespace OpenRA.Mods.Common.Traits
 
 		bool IsValidActor(Actor target)
 		{
-			var instantlyRepairable = target.TraitOrDefault<InstantlyRepairable>();
-			if (instantlyRepairable == null || instantlyRepairable.IsTraitDisabled)
+			var instantlyRepairable = target.Info.TraitInfoOrDefault<InstantlyRepairableInfo>();
+			if (instantlyRepairable == null)
 				return false;
 
-			if (!instantlyRepairable.Info.Types.IsEmpty && !instantlyRepairable.Info.Types.Overlaps(Info.Types))
+			if (!instantlyRepairable.Types.IsEmpty && !instantlyRepairable.Types.Overlaps(Info.Types))
 				return false;
 
 			return true;
