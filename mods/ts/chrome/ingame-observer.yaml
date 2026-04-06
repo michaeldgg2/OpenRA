@@ -107,6 +107,10 @@ Container@OBSERVER_WIDGETS:
 							Shadow: True
 				Container@REPLAY_PLAYER:
 					Logic: ReplayControlBarLogic
+						ReplaySpeedSlowKey: ReplaySpeedSlow
+						ReplaySpeedRegularKey: ReplaySpeedRegular
+						ReplaySpeedFastKey: ReplaySpeedFast
+						ReplaySpeedMaxKey: ReplaySpeedMax
 					Y: 39
 					Width: 160
 					Height: 35
@@ -142,46 +146,19 @@ Container@OBSERVER_WIDGETS:
 									Y: 5
 									ImageCollection: music
 									ImageName: play
-						Button@BUTTON_SLOW:
+						LogicKeyListener@REPLAY_KEYHANDLER:
+						Slider@SPEED_SLIDER:
 							X: 55
 							Y: 13
-							Width: 36
+							Width: 133
 							Height: 20
-							Key: ReplaySpeedSlow
-							TooltipText: button-replay-slow.tooltip
-							TooltipContainer: TOOLTIP_CONTAINER
-							Text: button-replay-slow.label
-							Font: TinyBold
-						Button@BUTTON_REGULAR:
-							X: 55 + 45
+						Label@SPEED_LABEL:
+							X: 190
 							Y: 13
-							Width: 38
+							Width: 30
 							Height: 20
-							Key: ReplaySpeedRegular
-							TooltipText: button-replay-regular.tooltip
-							TooltipContainer: TOOLTIP_CONTAINER
-							Text: button-replay-regular.label
 							Font: TinyBold
-						Button@BUTTON_FAST:
-							X: 55 + 45 * 2
-							Y: 13
-							Width: 38
-							Height: 20
-							Key: ReplaySpeedFast
-							TooltipText: button-replay-fast.tooltip
-							TooltipContainer: TOOLTIP_CONTAINER
-							Text: button-replay-fast.label
-							Font: TinyBold
-						Button@BUTTON_MAXIMUM:
-							X: 55 + 45 * 3
-							Y: 13
-							Width: 38
-							Height: 20
-							Key: ReplaySpeedMax
-							TooltipText: button-replay-maximum.tooltip
-							TooltipContainer: TOOLTIP_CONTAINER
-							Text: button-replay-maximum.label
-							Font: TinyBold
+							Align: Center
 		Container@INGAME_OBSERVERSTATS_BG:
 			Logic: ObserverStatsLogic
 				StatisticsNoneKey: StatisticsNone

@@ -173,6 +173,10 @@ Container@OBSERVER_WIDGETS:
 					Skippable: false
 		Background@REPLAY_PLAYER:
 			Logic: ReplayControlBarLogic
+				ReplaySpeedSlowKey: ReplaySpeedSlow
+				ReplaySpeedRegularKey: ReplaySpeedRegular
+				ReplaySpeedFastKey: ReplaySpeedFast
+				ReplaySpeedMaxKey: ReplaySpeedMax
 			X: WINDOW_WIDTH - WIDTH - 5
 			Y: 283
 			Width: 256
@@ -214,50 +218,20 @@ Container@OBSERVER_WIDGETS:
 							Height: 16
 							ImageCollection: music
 							ImageName: play
-				Button@BUTTON_SLOW:
+				LogicKeyListener@REPLAY_KEYHANDLER:
+
+				Slider@SPEED_SLIDER:
 					X: 57
 					Y: 13
-					Width: 36
+					Width: 152
 					Height: 20
-					Key: ReplaySpeedSlow
-					TooltipText: button-replay-player-slow.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-player-slow.label
-					Font: TinyBold
-				Button@BUTTON_REGULAR:
-					X: 57 + 48
+				Label@SPEED_LABEL:
+					X: 218
 					Y: 13
-					Width: 38
+					Width: 26
 					Height: 20
-					Key: ReplaySpeedRegular
-					TooltipText: button-replay-player-regular.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-player-regular.label
 					Font: TinyBold
-				Button@BUTTON_FAST:
-					X: 57 + 48 * 2
-					Y: 13
-					Width: 38
-					Height: 20
-					Key: ReplaySpeedFast
-					TooltipText: button-replay-player-fast.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-player-fast.label
-					Font: TinyBold
-				Button@BUTTON_MAXIMUM:
-					X: 57 + 48 * 3
-					Y: 13
-					Width: 38
-					Height: 20
-					Key: ReplaySpeedMax
-					TooltipText: button-replay-player-maximum.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-player-maximum.label
-					Font: TinyBold
+					Align: Center
 		DropDownButton@SHROUD_SELECTOR:
 			Logic: ObserverShroudSelectorLogic
 				CombinedViewKey: ObserverCombinedView

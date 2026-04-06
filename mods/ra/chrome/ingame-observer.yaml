@@ -129,6 +129,10 @@ Container@OBSERVER_WIDGETS:
 			ImageName: observer-bottom
 		Image@REPLAY_PLAYER:
 			Logic: ReplayControlBarLogic
+				ReplaySpeedSlowKey: ReplaySpeedSlow
+				ReplaySpeedRegularKey: ReplaySpeedRegular
+				ReplaySpeedFastKey: ReplaySpeedFast
+				ReplaySpeedMaxKey: ReplaySpeedMax
 			X: WINDOW_WIDTH - 250
 			Y: 297
 			Width: 238
@@ -171,54 +175,20 @@ Container@OBSERVER_WIDGETS:
 							Y: 6
 							ImageCollection: music
 							ImageName: play
-				Button@BUTTON_SLOW:
+				LogicKeyListener@REPLAY_KEYHANDLER:
+				Slider@SPEED_SLIDER:
 					X: 49
 					Y: 8
-					Width: 42
-					Height: 22
-					Background: sidebar-button-observer
-					Key: ReplaySpeedSlow
-					TooltipText: button-replay-slow.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-slow.label
-					Font: TinyBold
-				Button@BUTTON_REGULAR:
-					X: 95
+					Width: 150
+					Height: 20
+					MinimumValue: 0
+				Label@SPEED_LABEL:
+					X: 205
 					Y: 8
-					Width: 42
-					Height: 22
-					Background: sidebar-button-observer
-					Key: ReplaySpeedRegular
-					TooltipText: button-replay-regular.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-regular.label
+					Width: 28
+					Height: 20
 					Font: TinyBold
-				Button@BUTTON_FAST:
-					X: 141
-					Y: 8
-					Width: 42
-					Height: 22
-					Background: sidebar-button-observer
-					Key: ReplaySpeedFast
-					TooltipText: button-replay-fast.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-fast.label
-					Font: TinyBold
-				Button@BUTTON_MAXIMUM:
-					X: 187
-					Y: 8
-					Width: 42
-					Height: 22
-					Background: sidebar-button-observer
-					Key: ReplaySpeedMax
-					TooltipText: button-replay-maximum.tooltip
-					TooltipContainer: TOOLTIP_CONTAINER
-					VisualHeight: 0
-					Text: button-replay-maximum.label
-					Font: TinyBold
+					Align: Center
 		Container@INGAME_OBSERVERSTATS_BG:
 			Logic: ObserverStatsLogic
 				StatisticsNoneKey: StatisticsNone
